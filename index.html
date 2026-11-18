@@ -41,7 +41,7 @@ main { padding-block: 1.4rem 2.5rem; }
 .trail strong { display: block; font-size: .91rem; }
 .trail small { display: block; color: var(--muted); margin-top: .32rem; }
 .number { flex: 0 0 1.64rem; text-align: center; border: 1px solid #867d6e; border-radius: 50%; padding: .17rem 0; font-size: .82rem; }
-.workspace { display: grid; grid-template-columns: minmax(0,1.2fr) minmax(0,1fr); gap: 1.35rem; align-items: start; margin-top: 1.4rem; }
+.workspace { display: flex; flex-direction: column; gap: 1rem; width: 100%; max-width: 44rem; margin: .9rem auto 0; }
 .panel { min-width: 0; padding: clamp(1rem, 2vw, 1.6rem); border: 1px solid var(--line); border-radius: .6rem; background: var(--card); }
 .section-head { margin-bottom: .9rem; }
 .section-head p { color: var(--muted); margin-top: .35rem; }
@@ -79,7 +79,7 @@ button { cursor: pointer; }
 .feedback, .reference, .initial-block { background: #eeebe0; border: 1px solid #cac3b4; border-radius: .35rem; padding: .78rem; margin-block: .9rem; }
 .feedback p, .reference p, .initial-block p { margin-top: .4rem; }
 .initial-block { margin-block: 0; overflow-wrap: anywhere; }
-.claim-pair { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .75rem; align-items: start; margin-top: 1rem; }
+.claim-pair > .initial-block { margin-bottom: .75rem; }
 .claim-pair .field { margin-block: 0; }
 fieldset { min-inline-size: 0; padding: .65rem .8rem .8rem; border: 1px solid var(--line); border-radius: .35rem; margin: 1.1rem 0; }
 legend { font-weight: 740; padding-inline: .26rem; }
@@ -94,8 +94,7 @@ legend { font-weight: 740; padding-inline: .26rem; }
 dialog { width: min(31rem, calc(100% - 2rem)); padding: 1.3rem; border: 1px solid var(--slate); border-radius: .5rem; background: var(--card); color: var(--ink); }
 dialog::backdrop { background: rgb(20 32 35 / 55%); }
 dialog p { margin-top: .55rem; }
-@media (max-width: 65rem) { .claim-pair { grid-template-columns: 1fr; } }
-@media (max-width: 49rem) { .workspace { grid-template-columns: 1fr; } .trail { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media (max-width: 49rem) { .trail { grid-template-columns: repeat(2,minmax(0,1fr)); } }
 @media (max-width: 30rem) { .wrap { width: calc(100% - 1.5rem); } .trail button { padding: .55rem; gap: .4rem; } .trail-head {display:block;} .trail-head p { margin-top: .25rem; } }
 :root {
   --paper: #ede5d7;
@@ -122,7 +121,6 @@ main { padding-block: .95rem 1.6rem; }
 .trail button:disabled { background: #e7dfd1; }
 .trail small { margin-top: .23rem; }
 .number { color: #5c3e25; background: #fff5df; }
-.workspace { grid-template-columns: minmax(0,1.18fr) minmax(0,1fr); gap: 1rem; margin-top: .9rem; }
 .panel { border-radius: .57rem; padding: clamp(.85rem, 1.55vw, 1.25rem); box-shadow: 0 3px 14px #4833200e; }
 .section-head { margin-bottom: .7rem; }
 .section-head h2 { font-size: clamp(1.42rem, 2.25vw, 1.8rem); }
@@ -165,7 +163,6 @@ fieldset { margin: .72rem 0; }
 .foot details { max-width: 75ch; }
 .foot details p { margin-top: .3rem; }
 @media (max-width: 52rem) {
-  .workspace { grid-template-columns: 1fr; }
   .trail { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .source-visual img { height: clamp(9rem,28vw,13rem); }
 }
@@ -255,7 +252,7 @@ fieldset { margin: .72rem 0; }
     <section class="panel note" aria-label="Evidence notebook">
       <section id="step-1" class="step">
         <p class="step-count">Step 1 of 4</p>
-        <header class="section-head"><h2 id="step-title-1" tabindex="-1">Initial interpretation</h2><p>Start with the Worker’s account. Make a tentative inference that you can revisit as the evidence grows.</p></header>
+        <header class="section-head"><h2 id="step-title-1" tabindex="-1">Initial interpretation</h2><p>Start with the Worker’s account. Make a tentative inference that you can revisit as the evidence grows.</p><a class="jump" href="#evidence-heading">Review the available accounts</a></header>
         <div id="initial-archive" class="initial-block" hidden>
           <h3>Original response</h3>
           <p><strong>Initial claim</strong></p><p id="archive-claim"></p>
@@ -271,7 +268,7 @@ fieldset { margin: .72rem 0; }
       </section>
       <section id="step-2" class="step" hidden>
         <p class="step-count">Step 2 of 4</p>
-        <header class="section-head"><h2 id="step-title-2" tabindex="-1">Compare company and newspaper accounts</h2><p>Compare the Company statement and Newspaper account with each other or with the Worker’s account.</p></header>
+        <header class="section-head"><h2 id="step-title-2" tabindex="-1">Compare company and newspaper accounts</h2><p>Compare the Company statement and Newspaper account with each other or with the Worker’s account.</p><a class="jump" href="#evidence-heading">Review the available accounts</a></header>
         <form id="comparison-form" novalidate>
           <div class="field"><label for="comparison">Agreement or tension</label><p id="comparison-hint" class="hint">Name the accounts and identify one point where they agree or differ.</p><textarea id="comparison" rows="2" required aria-describedby="comparison-hint"></textarea><p id="comparison-error" class="error" hidden>Enter one agreement or tension.</p></div>
           <div class="field"><label for="comparison-context">What the context changes</label><p id="comparison-context-hint" class="hint">Explain how one account’s purpose, audience, or access to events affects what it can support.</p><textarea id="comparison-context" rows="2" required aria-describedby="comparison-context-hint"></textarea><p id="comparison-context-error" class="error" hidden>Explain how the source context affects what the account can support.</p></div>
@@ -287,7 +284,7 @@ fieldset { margin: .72rem 0; }
       </section>
       <section id="step-3" class="step" hidden>
         <p class="step-count">Step 3 of 4</p>
-        <header class="section-head"><h2 id="step-title-3" tabindex="-1">Consider the investigator’s account</h2><p>Read the Reform investigator’s account alongside the earlier evidence.</p></header>
+        <header class="section-head"><h2 id="step-title-3" tabindex="-1">Consider the investigator’s account</h2><p>Read the Reform investigator’s account alongside the earlier evidence.</p><a class="jump" href="#evidence-heading">Review the available accounts</a></header>
         <form id="reform-form" novalidate>
           <div class="field"><label for="reform-detail">A detail that supports or complicates your claim</label><textarea id="reform-detail" rows="2" required></textarea><p id="reform-detail-error" class="error" hidden>Enter one detail that supports or complicates your claim.</p></div>
           <div class="field"><label for="reform-limit">A conclusion the Reform investigator’s account cannot establish</label><textarea id="reform-limit" rows="2" required></textarea><p id="reform-limit-error" class="error" hidden>Enter one conclusion the account cannot establish.</p></div>
@@ -533,7 +530,7 @@ function goTo(step) {
   state.current = step;
   save();
   render();
-  stepPanels[step - 1].querySelector("h2").focus({ preventScroll: true });
+  get("evidence-heading").focus({ preventScroll: true });
   document.getElementById("main").scrollIntoView({ block: "start" });
 }
 
