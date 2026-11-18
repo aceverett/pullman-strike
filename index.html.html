@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Whose Account Do You Trust? | Pullman Strike evidence workspace</title>
+<style>
+:root {
+  color-scheme: light;
+  --paper: #f5f2e9; --card: #fffdf7; --ink: #242a2c; --slate: #23343b;
+  --muted: #4b5659; --line: #bcb5a6; --ochre: #845719; --pale: #eee4cd;
+  --sans: system-ui, sans-serif; --serif: Georgia, serif;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 1rem/1.55 var(--sans); }
+a { color: #204b61; text-underline-offset: .18em; }
+button, textarea, input { font: inherit; }
+:focus-visible, [tabindex="-1"]:focus { outline: 3px solid #975c11; outline-offset: 4px; }
+.skip { position: absolute; z-index: 3; top: .7rem; left: .7rem; padding: .55rem 1rem; background: white; }
+.skip:not(:focus) { clip-path: inset(50%); }
+.wrap { width: min(100% - 3.5rem, 78rem); margin-inline: auto; }
+.mast { background: var(--slate); color: white; border-bottom: 4px solid #b8853f; }
+.mast .wrap { padding-block: 2rem 2.1rem; }
+.kicker, .step-count { font-size: .83rem; font-weight: 750; letter-spacing: .095em; text-transform: uppercase; }
+.mast .kicker { color: #f2d39c; margin: 0 0 .55rem; }
+h1,h2,h3,p { margin-block: 0; }
+h1,h2 { font-family: var(--serif); font-weight: 600; line-height: 1.16; }
+h1 { font-size: clamp(2.25rem, 4.75vw, 4.1rem); margin-bottom: .7rem; }
+h2 { font-size: clamp(1.5rem, 2.6vw, 2rem); }
+h3 { font-size: 1.13rem; line-height: 1.3; }
+.mast p:last-child { max-width: 66ch; color: #f1f1e9; }
+main { padding-block: 1.4rem 2.5rem; }
+.trail-head { display:flex; align-items: baseline; justify-content: space-between; gap: .55rem; margin-bottom: .65rem; }
+.trail-head h2 { font: 750 1rem/1.25 var(--sans); }
+.trail-head p { color: var(--muted); font-size: .88rem; }
+.trail { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: .65rem; }
+.trail button { width: 100%; height: 100%; text-align: left; display: flex; align-items: start; gap: .65rem; padding: .78rem; border: 1px solid var(--line); background: var(--card); border-radius: .42rem; color: var(--ink); line-height: 1.22; }
+.trail button[aria-current="step"] { background: var(--pale); border-color: var(--ochre); box-shadow: inset 0 -3px var(--ochre); }
+.trail button:disabled { cursor: default; background: #ebe8df; }
+.trail strong { display: block; font-size: .91rem; }
+.trail small { display: block; color: var(--muted); margin-top: .32rem; }
+.number { flex: 0 0 1.64rem; text-align: center; border: 1px solid #867d6e; border-radius: 50%; padding: .17rem 0; font-size: .82rem; }
+.workspace { display: grid; grid-template-columns: minmax(0,1.2fr) minmax(0,1fr); gap: 1.35rem; align-items: start; margin-top: 1.4rem; }
+.panel { min-width: 0; padding: clamp(1rem, 2vw, 1.6rem); border: 1px solid var(--line); border-radius: .6rem; background: var(--card); }
+.section-head { margin-bottom: .9rem; }
+.section-head p { color: var(--muted); margin-top: .35rem; }
+.jump { display: inline-block; margin-top: .45rem; font-size: .9rem; }
+.source-links { display: flex; flex-wrap: wrap; gap: .15rem .9rem; margin-top: .45rem; }
+.context { background: #edebe1; padding: .8rem 1rem; border-radius: .35rem; margin-block: 0 .9rem; }
+summary { cursor: pointer; font-weight: 720; }
+.context p { margin-top: .55rem; }
+.context ul { margin: .5rem 0 .08rem; padding-left: 1.25rem; }
+.context li + li { margin-top: .35rem; }
+.source { padding: .95rem 1rem; border: 1px solid var(--line); border-radius: .4rem; background: #fffefa; }
+.source + .source { margin-top: .7rem; }
+.source-tag { display:inline-block; padding: .12rem .44rem; background: var(--pale); color: #674713; font-size: .78rem; font-weight: 700; margin-block: .4rem .65rem; border-radius: .2rem; }
+.source details { border-top: 1px solid #d9d3c5; margin-top: .75rem; padding-top: .65rem; }
+.source dl { margin: .55rem 0 .15rem; font-size: .94rem; }
+.source dt { font-weight: 730; }
+.source dd { margin: 0 0 .5rem; }
+.source dd:last-child { margin-bottom: 0; }
+.note { background: #fbf8ef; }
+.step-count { color: var(--ochre); margin-bottom: .35rem; }
+.field { margin: 1rem 0; min-width: 0; }
+.field label { display: block; font-weight: 730; }
+.hint { color: var(--muted); font-size: .9rem; margin: .2rem 0 .4rem; }
+textarea, input[type="text"] { display: block; width: 100%; color: var(--ink); background: #fffefa; border: 1px solid #827c6e; border-radius: .3rem; padding: .58rem .64rem; margin-top: .35rem; }
+textarea { resize: vertical; min-height: 4.4rem; }
+[aria-invalid="true"] { border: 2px solid #932c21; }
+.error { color: #881f1b; font-weight: 650; font-size: .91rem; margin-top: .25rem; }
+button { cursor: pointer; }
+.action, .secondary { padding: .6rem .85rem; border: 1px solid var(--slate); border-radius: .32rem; font-weight: 730; line-height: 1.28; min-height: 2.6rem; }
+.action { background: var(--slate); color: white; }
+.action:hover { background: #344d57; }
+.secondary { background: var(--card); color: var(--slate); }
+.secondary:hover { background: var(--pale); }
+.actions { display: flex; align-items: start; flex-wrap: wrap; gap: .55rem; margin-top: .85rem; }
+.feedback, .reference, .initial-block { background: #eeebe0; border: 1px solid #cac3b4; border-radius: .35rem; padding: .78rem; margin-block: .9rem; }
+.feedback p, .reference p, .initial-block p { margin-top: .4rem; }
+.initial-block { margin-block: 0; overflow-wrap: anywhere; }
+.claim-pair { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .75rem; align-items: start; margin-top: 1rem; }
+.claim-pair .field { margin-block: 0; }
+fieldset { min-inline-size: 0; padding: .65rem .8rem .8rem; border: 1px solid var(--line); border-radius: .35rem; margin: 1.1rem 0; }
+legend { font-weight: 740; padding-inline: .26rem; }
+.check { display: flex; align-items: baseline; gap: .5rem; padding-block: .26rem; font-size: .94rem; }
+.check input { flex: none; margin: 0; accent-color: var(--slate); width: 1rem; height: 1rem; }
+#summary-panel { margin-top: 1.35rem; border-top: 3px solid var(--ochre); }
+#summary-text { min-height: 14rem; }
+#export-status:not(:empty) { margin-top: .65rem; }
+#archive-claim, #archive-question, #initial-preview { white-space: pre-wrap; }
+.foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .65rem; margin-top: 1.4rem; padding-top: .9rem; border-top: 1px solid var(--line); }
+.foot p { max-width: 72ch; font-size: .9rem; color: var(--muted); }
+dialog { width: min(31rem, calc(100% - 2rem)); padding: 1.3rem; border: 1px solid var(--slate); border-radius: .5rem; background: var(--card); color: var(--ink); }
+dialog::backdrop { background: rgb(20 32 35 / 55%); }
+dialog p { margin-top: .55rem; }
+@media (max-width: 65rem) { .claim-pair { grid-template-columns: 1fr; } }
+@media (max-width: 49rem) { .workspace { grid-template-columns: 1fr; } .trail { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media (max-width: 30rem) { .wrap { width: calc(100% - 1.5rem); } .trail button { padding: .55rem; gap: .4rem; } .trail-head {display:block;} .trail-head p { margin-top: .25rem; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to activity</a>
+<header class="mast">
+  <div class="wrap">
+    <p class="kicker">Pullman Strike · 1894</p>
+    <h1>Whose Account Do You Trust?</h1>
+    <p>Investigate what contributed to the conflict. Write a working interpretation, then reconsider it as more accounts become available. Bring your revised claim to the seminar.</p>
+  </div>
+</header>
+<main id="main" class="wrap" tabindex="-1">
+  <nav aria-labelledby="trail-heading">
+    <div class="trail-head"><h2 id="trail-heading">Source trail</h2><p>15–20 minutes · Work at your own pace</p></div>
+    <ol class="trail">
+      <li><button type="button" data-step="1" aria-controls="step-1"><span class="number" aria-hidden="true">1</span><span><strong>Initial interpretation</strong><small>Current step</small></span></button></li>
+      <li><button type="button" data-step="2" aria-controls="step-2"><span class="number" aria-hidden="true">2</span><span><strong>Compare company and newspaper accounts</strong><small>Locked</small></span></button></li>
+      <li><button type="button" data-step="3" aria-controls="step-3"><span class="number" aria-hidden="true">3</span><span><strong>Consider the investigator’s account</strong><small>Locked</small></span></button></li>
+      <li><button type="button" data-step="4" aria-controls="step-4"><span class="number" aria-hidden="true">4</span><span><strong>Revise the claim</strong><small>Locked</small></span></button></li>
+    </ol>
+  </nav>
+  <div class="workspace">
+    <section class="panel" aria-labelledby="evidence-heading">
+      <header class="section-head"><h2 id="evidence-heading" tabindex="-1">Evidence workspace</h2><p id="available-count">1 of 4 accounts available</p><a class="jump" id="response-link" href="#step-title-1">Jump to your response</a></header>
+      <details class="context" id="background" open>
+        <summary>Historical background</summary>
+        <ul>
+          <li>The Pullman Company made railroad sleeping cars near Chicago and ran a company town where many workers rented homes.</li>
+          <li>During the economic downturn of the 1890s, wages were cut. Workers argued that rent and other living costs did not fall as much as wages.</li>
+          <li>Workers went on strike in 1894. The American Railway Union backed them with a wider boycott involving trains carrying Pullman cars.</li>
+          <li>Rail traffic was disrupted. Federal intervention and court action became major parts of the conflict. Violence occurred in some locations during the broader strike and boycott.</li>
+          <li>Historical interpretations differ over responsibility, federal power, workers’ demands, union strategy, and what the conflict meant.</li>
+        </ul>
+        <p class="hint"><strong>Company town:</strong> A town run by a company. <strong>Boycott:</strong> An organized refusal to deal with something as a form of protest.</p>
+      </details>
+      <article class="source" data-unlock="1" aria-labelledby="worker-title">
+        <h3 id="worker-title" tabindex="-1">Worker’s account</h3>
+        <p class="source-tag">Simulated composite for learning</p>
+        <p>A Pullman employee describes a recent wage cut, says rent is still hard to pay, and worries that missing work will leave the family without money for groceries. The employee says supervisors dismiss complaints and describes the strike as a last resort.</p>
+        <details open><summary>Context for the Worker’s account</summary>
+          <dl><dt>Form, audience, and purpose</dt><dd>A private letter to a sibling describing the worker’s situation and concerns.</dd>
+          <dt>Access to events</dt><dd>The writer knows the household’s finances firsthand and has limited knowledge of company-wide finances or negotiations.</dd></dl>
+        </details>
+      </article>
+      <article class="source" data-unlock="2" aria-labelledby="company-title" hidden>
+        <h3 id="company-title" tabindex="-1">Company statement</h3>
+        <p class="source-tag">Simulated composite for learning</p>
+        <p>The company says falling demand reduced revenue and argues that wage cuts were necessary to keep operations running. It says rental properties are separate from wage decisions and emphasizes past investments in housing and community facilities.</p>
+        <details open><summary>Context for the Company statement</summary>
+          <dl><dt>Form, audience, and purpose</dt><dd>A public statement distributed to newspapers to defend company decisions.</dd>
+          <dt>Access to events</dt><dd>It presents the company’s own decisions and explanations. It may contain useful information about operations and is also meant to persuade.</dd></dl>
+        </details>
+      </article>
+      <article class="source" data-unlock="2" aria-labelledby="newspaper-title" hidden>
+        <h3 id="newspaper-title" tabindex="-1">Newspaper account</h3>
+        <p class="source-tag">Simulated composite for learning</p>
+        <p>A Chicago reporter describes delayed trains, crowds near rail yards, and passengers frustrated by disrupted service. The report quotes a railroad manager who blames union leaders and briefly mentions workers’ complaints about wages.</p>
+        <details open><summary>Context for the Newspaper account</summary>
+          <dl><dt>Form, audience, and purpose</dt><dd>A newspaper report for a citywide readership, rather than primarily Pullman workers. It reports on rail disruptions.</dd>
+          <dt>Access to events</dt><dd>The reporter observes some events firsthand and relies heavily on railroad officials. The claim about union leaders comes from a railroad manager.</dd></dl>
+        </details>
+      </article>
+      <article class="source" data-unlock="3" aria-labelledby="reform-title" hidden>
+        <h3 id="reform-title" tabindex="-1">Reform investigator’s account</h3>
+        <p class="source-tag">Simulated composite for learning</p>
+        <p>A social reformer records conversations with several worker families, notes small homes and household budgets, and questions whether company-town arrangements give workers enough independence. The notes also acknowledge that some residents praise the town’s cleanliness and services.</p>
+        <details open><summary>Context for the Reform investigator’s account</summary>
+          <dl><dt>Form, audience, and purpose</dt><dd>Field notes by an investigator sympathetic to reform who seeks evidence about living conditions. The materials do not specify an audience.</dd>
+          <dt>Access to events</dt><dd>The notes draw on observations and interviews with several families. They are not a representative survey.</dd></dl>
+        </details>
+      </article>
+    </section>
+    <section class="panel note" aria-label="Evidence notebook">
+      <section id="step-1" class="step">
+        <p class="step-count">Step 1 of 4</p>
+        <header class="section-head"><h2 id="step-title-1" tabindex="-1">Initial interpretation</h2><p>Start with the Worker’s account. Make a tentative inference that you can revisit as the evidence grows.</p></header>
+        <div id="initial-archive" class="initial-block" hidden>
+          <h3>Original response</h3>
+          <p><strong>Initial claim</strong></p><p id="archive-claim"></p>
+          <p><strong>Unanswered question</strong></p><p id="archive-question"></p>
+          <p class="hint">This first response stays as written. You can qualify or change it in Step 4.</p>
+          <button type="button" class="secondary" data-go="2">Return to the comparison</button>
+        </div>
+        <form id="initial-form" novalidate>
+          <div class="field"><label for="initial">Tentative claim</label><p class="hint" id="initial-hint">In one sentence, explain what appears to have contributed to the conflict.</p><textarea id="initial" rows="3" required aria-describedby="initial-hint"></textarea><p id="initial-error" class="error" hidden>Enter a tentative claim.</p></div>
+          <div class="field"><label for="unknown">Unanswered question</label><p class="hint" id="unknown-hint">What would you need to know to test your claim?</p><textarea id="unknown" rows="2" required aria-describedby="unknown-hint"></textarea><p id="unknown-error" class="error" hidden>Enter one unanswered question.</p></div>
+          <button class="action" type="submit">Save initial claim and reveal company and newspaper accounts</button>
+        </form>
+      </section>
+      <section id="step-2" class="step" hidden>
+        <p class="step-count">Step 2 of 4</p>
+        <header class="section-head"><h2 id="step-title-2" tabindex="-1">Compare company and newspaper accounts</h2><p>Compare the Company statement and Newspaper account with each other or with the Worker’s account.</p><div class="source-links"><a href="#worker-title">Worker’s account</a><a href="#company-title">Company statement</a><a href="#newspaper-title">Newspaper account</a></div></header>
+        <form id="comparison-form" novalidate>
+          <div class="field"><label for="comparison">Agreement or tension</label><p id="comparison-hint" class="hint">Name the accounts and identify one point where they agree or differ.</p><textarea id="comparison" rows="3" required aria-describedby="comparison-hint"></textarea><p id="comparison-error" class="error" hidden>Enter one agreement or tension.</p></div>
+          <div class="field"><label for="comparison-context">What the context changes</label><p id="comparison-context-hint" class="hint">Explain how one account’s purpose, audience, or access to events affects what it can support.</p><textarea id="comparison-context" rows="3" required aria-describedby="comparison-context-hint"></textarea><p id="comparison-context-error" class="error" hidden>Explain how the source context affects what the account can support.</p></div>
+          <button class="action" type="submit">Save comparison and see feedback</button>
+        </form>
+        <div id="comparison-feedback" class="feedback" hidden>
+          <h3 tabindex="-1">Check your comparison</h3>
+          <p>The public purpose of the Company statement does not rule out useful information about company decisions. The Worker’s account offers a firsthand view of household pressures. The Newspaper account combines observation with a railroad manager’s explanation.</p>
+          <p>Corroborate means to check a claim against other evidence. If the Company statement and Newspaper account agree, consider where each got its information before counting the agreement as independent support.</p>
+          <div class="actions"><button type="button" class="secondary" data-go="3">Reveal the Reform investigator’s account</button></div>
+        </div>
+      </section>
+      <section id="step-3" class="step" hidden>
+        <p class="step-count">Step 3 of 4</p>
+        <header class="section-head"><h2 id="step-title-3" tabindex="-1">Consider the investigator’s account</h2><p>Read the Reform investigator’s account alongside the earlier evidence.</p><a class="jump" href="#reform-title">Read the Reform investigator’s account</a></header>
+        <form id="reform-form" novalidate>
+          <div class="field"><label for="reform-detail">A detail that supports or complicates your claim</label><textarea id="reform-detail" rows="3" required></textarea><p id="reform-detail-error" class="error" hidden>Enter one detail that supports or complicates your claim.</p></div>
+          <div class="field"><label for="reform-limit">A conclusion the Reform investigator’s account cannot establish</label><textarea id="reform-limit" rows="3" required></textarea><p id="reform-limit-error" class="error" hidden>Enter one conclusion the account cannot establish.</p></div>
+          <button class="action" type="submit">Save response and see feedback</button>
+        </form>
+        <div id="reform-feedback" class="feedback" hidden>
+          <h3 tabindex="-1">Check what the field notes can support</h3>
+          <p>The Reform investigator’s account gives evidence from several families and includes differing views of town services. It can help you compare household pressures with the Worker’s account. Several interviews cannot establish what every family experienced.</p>
+          <div class="actions"><button type="button" class="secondary" data-go="4">Continue to claim revision</button></div>
+        </div>
+      </section>
+      <section id="step-4" class="step" hidden>
+        <p class="step-count">Step 4 of 4</p>
+        <header class="section-head"><h2 id="step-title-4" tabindex="-1">Revise the claim</h2><p>You can keep your main interpretation and make it more precise, or change it if the evidence warrants it.</p><a class="jump" href="#evidence-heading">Review the available accounts</a></header>
+        <form id="revision-form" novalidate>
+          <div class="claim-pair">
+            <div class="initial-block"><h3>Original initial claim</h3><p id="initial-preview"></p></div>
+            <div class="field"><label for="revised">Revised claim</label><p id="revised-hint" class="hint">In 2–3 sentences, name at least two accounts, explain one corroboration or tension, and acknowledge a limit.</p><textarea id="revised" rows="5" required aria-describedby="revised-hint"></textarea><p id="revised-error" class="error" hidden>Enter your revised claim.</p></div>
+          </div>
+          <div class="field"><label for="change">What changed or became more precise?</label><textarea id="change" rows="2" required></textarea><p id="change-error" class="error" hidden>Explain what changed or became more precise.</p></div>
+          <div class="field"><label for="used">Accounts you used</label><p id="used-hint" class="hint">Enter the descriptive names as shown on the source cards.</p><input id="used" type="text" required aria-describedby="used-hint"><p id="used-error" class="error" hidden>Enter the names of the accounts you used.</p></div>
+          <aside class="reference" aria-labelledby="seminar-heading"><h3 id="seminar-heading">Seminar question for reference</h3><p id="seminar-question">Was the Pullman Strike primarily caused by unfair working and living conditions, by economic conditions beyond the company’s control, or by escalating conflict among workers, unions, companies, and government?</p></aside>
+          <div class="field"><label for="discussion">Your discussion question</label><p id="discussion-hint" class="hint">What question would you bring to the seminar after reading the evidence?</p><textarea id="discussion" rows="2" required aria-describedby="discussion-hint"></textarea><p id="discussion-error" class="error" hidden>Enter one discussion question for the seminar.</p></div>
+          <fieldset><legend>Self-review checklist</legend>
+            <label class="check"><input type="checkbox" id="check-evidence"> My claim uses relevant evidence from at least two accounts.</label>
+            <label class="check"><input type="checkbox" id="check-names"> I identified the accounts by name so readers can follow my evidence.</label>
+            <label class="check"><input type="checkbox" id="check-context"> I considered source context and limits.</label>
+            <label class="check"><input type="checkbox" id="check-comparison"> I explained a corroboration or tension.</label>
+            <label class="check"><input type="checkbox" id="check-uncertainty"> I identified a specific uncertainty.</label>
+          </fieldset>
+          <button class="action" type="submit">Prepare my seminar summary</button>
+        </form>
+        <section id="summary-panel" aria-labelledby="summary-heading" hidden>
+          <h3 id="summary-heading" tabindex="-1">Your seminar summary</h3>
+          <p class="hint" id="summary-hint">Read-only preview. You can still edit your responses above and prepare an updated summary.</p>
+          <textarea id="summary-text" readonly rows="12" aria-label="Seminar summary text" aria-describedby="summary-hint"></textarea>
+          <div class="actions">
+            <button id="copy-summary" class="action" type="button">Copy summary</button>
+            <button id="download-summary" class="secondary" type="button">Download plain text</button>
+            <button id="select-summary" class="secondary" type="button">Select text for manual copy</button>
+          </div>
+          <p id="export-status" role="status"></p>
+        </section>
+      </section>
+    </section>
+  </div>
+  <footer class="foot">
+    <p><span id="storage-status" role="status"></span> This is ungraded seminar preparation. Your responses are not sent to an instructor or LMS.</p>
+    <button class="secondary" id="reset" type="button">Reset activity</button>
+  </footer>
+</main>
+<dialog id="reset-dialog" aria-labelledby="reset-heading" aria-describedby="reset-message">
+  <h2 id="reset-heading">Reset the activity?</h2>
+  <p id="reset-message">This clears your responses, checklist, and progress, including your original initial claim.</p>
+  <form method="dialog" class="actions">
+    <button class="secondary" value="cancel" autofocus>Keep my work</button>
+    <button class="action" value="clear">Clear responses and restart</button>
+  </form>
+</dialog>
+<noscript><p class="wrap">Enable JavaScript in your browser to reveal accounts and use the evidence notebook.</p></noscript>
+<script>
+"use strict";
+
+const get = (id) => document.getElementById(id);
+const storageKey = "pullman-evidence-workspace-v1";
+const stepPanels = [...document.querySelectorAll(".step")];
+const trailButtons = [...document.querySelectorAll("[data-step]")];
+const sourceCards = [...document.querySelectorAll("[data-unlock]")];
+const responseFields = [...document.querySelectorAll("form [required]")];
+const checklist = [...document.querySelectorAll(".check input")];
+const comparisonForm = get("comparison-form");
+const reformForm = get("reform-form");
+const revisionForm = get("revision-form");
+const resetDialog = get("reset-dialog");
+
+function blankState() {
+  return {
+    current: 1, unlocked: 1, original: null, responses: {}, checks: {},
+    comparisonSaved: false, reformSaved: false, summaryReady: false
+  };
+}
+
+let storageAvailable = true;
+let state = blankState();
+try {
+  const saved = localStorage.getItem(storageKey);
+  if (saved) state = { ...state, ...JSON.parse(saved) };
+} catch {
+  storageAvailable = false;
+}
+
+function storageMessage() {
+  get("storage-status").textContent = storageAvailable
+    ? "Responses are stored in this browser and can survive a refresh if you keep using this copy of the file. Moving the file, switching browser profiles, or clearing browser data may remove access to your work."
+    : "This browser could not store responses for this file. Keep this tab open and copy or download your summary before closing or refreshing.";
+}
+
+function save() {
+  if (!storageAvailable) return;
+  try {
+    localStorage.setItem(storageKey, JSON.stringify(state));
+  } catch {
+    storageAvailable = false;
+    storageMessage();
+  }
+}
+
+function hydrateFields() {
+  for (const field of responseFields) field.value = state.responses[field.id] ?? "";
+  for (const item of checklist) item.checked = Boolean(state.checks[item.id]);
+}
+
+function setError(field, invalid) {
+  const error = get(field.id + "-error");
+  const hint = get(field.id + "-hint");
+  error.hidden = !invalid;
+  if (invalid) field.setAttribute("aria-invalid", "true");
+  else field.removeAttribute("aria-invalid");
+  const description = [hint?.id, invalid ? error.id : null].filter(Boolean).join(" ");
+  if (description) field.setAttribute("aria-describedby", description);
+  else field.removeAttribute("aria-describedby");
+}
+
+function requiredFields(form) {
+  return [...form.querySelectorAll("[required]")];
+}
+
+function validate(form) {
+  let firstEmpty = null;
+  for (const field of requiredFields(form)) {
+    const empty = !field.value.trim();
+    setError(field, empty);
+    if (empty && !firstEmpty) firstEmpty = field;
+  }
+  if (firstEmpty) firstEmpty.focus();
+  return !firstEmpty;
+}
+
+function refreshSummary() {
+  const ready = state.summaryReady && requiredFields(revisionForm).every((field) => field.value.trim());
+  get("summary-panel").hidden = !ready;
+  if (!ready) return;
+  get("summary-text").value = [
+    "Whose Account Do You Trust?",
+    "Pullman Strike seminar preparation",
+    "",
+    "Original initial claim",
+    state.original.claim,
+    "",
+    "Revised claim",
+    state.responses.revised.trim(),
+    "",
+    "What changed or became more precise",
+    state.responses.change.trim(),
+    "",
+    "Accounts used",
+    state.responses.used.trim(),
+    "",
+    "My discussion question",
+    state.responses.discussion.trim(),
+    "",
+    "Seminar question for reference",
+    get("seminar-question").textContent.trim()
+  ].join("\n");
+}
+
+function render() {
+  get("response-link").href = "#step-title-" + state.current;
+  for (const button of trailButtons) {
+    const step = Number(button.dataset.step);
+    const current = step === state.current;
+    button.disabled = step > state.unlocked;
+    if (current) button.setAttribute("aria-current", "step");
+    else button.removeAttribute("aria-current");
+    button.querySelector("small").textContent = current ? "Current step"
+      : button.disabled ? "Locked" : step < state.unlocked ? "Available to revisit" : "Available";
+  }
+  for (const [index, panel] of stepPanels.entries()) panel.hidden = index + 1 !== state.current;
+  for (const card of sourceCards) card.hidden = Number(card.dataset.unlock) > state.unlocked;
+
+  const count = sourceCards.filter((card) => !card.hidden).length;
+  get("available-count").textContent = count === 1 ? "1 of 4 accounts available · Worker’s account"
+    : count === 3 ? "3 of 4 accounts available · Worker’s account, Company statement, Newspaper account"
+    : "All 4 accounts available to review.";
+
+  get("initial-form").hidden = Boolean(state.original);
+  get("initial-archive").hidden = !state.original;
+  get("archive-claim").textContent = state.original?.claim ?? "";
+  get("archive-question").textContent = state.original?.unknown ?? "";
+  get("initial-preview").textContent = state.original?.claim ?? "";
+  get("comparison-feedback").hidden = !state.comparisonSaved;
+  get("reform-feedback").hidden = !state.reformSaved;
+  refreshSummary();
+}
+
+function goTo(step) {
+  state.current = step;
+  save();
+  render();
+  stepPanels[step - 1].querySelector("h2").focus();
+}
+
+for (const button of trailButtons) {
+  button.addEventListener("click", () => goTo(Number(button.dataset.step)));
+}
+
+for (const field of responseFields) {
+  field.addEventListener("input", () => {
+    state.responses[field.id] = field.value;
+    if (field.value.trim() && field.hasAttribute("aria-invalid")) setError(field, false);
+    if (field.form === revisionForm) {
+      refreshSummary();
+      get("export-status").textContent = "";
+    }
+    save();
+  });
+}
+
+for (const item of checklist) {
+  item.addEventListener("change", () => {
+    state.checks[item.id] = item.checked;
+    save();
+  });
+}
+
+get("initial-form").addEventListener("submit", (event) => {
+  event.preventDefault();
+  if (state.original || !validate(event.currentTarget)) return;
+  state.original = { claim: get("initial").value, unknown: get("unknown").value };
+  state.unlocked = 2;
+  get("background").open = false;
+  goTo(2);
+});
+
+function recordFeedback(form, stateProperty, feedbackId) {
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!validate(form)) return;
+    state[stateProperty] = true;
+    save();
+    const feedback = get(feedbackId);
+    feedback.hidden = false;
+    feedback.querySelector("h3").focus();
+  });
+}
+recordFeedback(comparisonForm, "comparisonSaved", "comparison-feedback");
+recordFeedback(reformForm, "reformSaved", "reform-feedback");
+
+for (const button of document.querySelectorAll("[data-go]")) {
+  button.addEventListener("click", () => {
+    const step = Number(button.dataset.go);
+    const prerequisite = step === 3 ? comparisonForm : step === 4 ? reformForm : null;
+    if (prerequisite && !validate(prerequisite)) return;
+    state.unlocked = Math.max(state.unlocked, step);
+    goTo(step);
+  });
+}
+
+revisionForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  if (!validate(revisionForm)) return;
+  state.summaryReady = true;
+  save();
+  refreshSummary();
+  get("export-status").textContent = "Your seminar summary is ready.";
+  get("summary-heading").focus();
+});
+
+function manualCopy(message) {
+  const summary = get("summary-text");
+  summary.focus();
+  summary.select();
+  get("export-status").textContent = message;
+}
+
+get("copy-summary").addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText(get("summary-text").value);
+    get("export-status").textContent = "Summary copied to the clipboard.";
+  } catch {
+    manualCopy("Automatic copy was unavailable. The summary is selected. Press Ctrl+C or Command+C to copy it.");
+  }
+});
+
+get("select-summary").addEventListener("click", () => {
+  manualCopy("The summary is selected. Press Ctrl+C or Command+C to copy it.");
+});
+
+get("download-summary").addEventListener("click", () => {
+  let url;
+  try {
+    const file = new Blob([get("summary-text").value + "\n"], { type: "text/plain;charset=utf-8" });
+    url = URL.createObjectURL(file);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "pullman-strike-seminar-summary.txt";
+    document.body.append(link);
+    link.click();
+    link.remove();
+    get("export-status").textContent = "Download started. Check your browser’s downloads.";
+  } catch {
+    manualCopy("The download could not start. The summary is selected for manual copy.");
+  } finally {
+    if (url) setTimeout(() => URL.revokeObjectURL(url), 30000);
+  }
+});
+
+get("reset").addEventListener("click", () => {
+  resetDialog.returnValue = "cancel";
+  resetDialog.showModal();
+});
+
+resetDialog.addEventListener("close", () => {
+  if (resetDialog.returnValue !== "clear") return;
+  state = blankState();
+  hydrateFields();
+  for (const field of responseFields) setError(field, false);
+  for (const detail of document.querySelectorAll("details")) detail.open = true;
+  get("export-status").textContent = "";
+  goTo(1);
+});
+
+hydrateFields();
+if (state.original) get("background").open = false;
+save();
+storageMessage();
+render();
+</script>
+</body>
+</html>
